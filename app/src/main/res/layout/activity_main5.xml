@@ -151,7 +151,7 @@
         android:layout_marginStart="13dp"
         android:layout_marginEnd="42dp"
         android:layout_marginBottom="283dp"
-        android:text="cinsiyet :"
+        android:text="Kendini tanıt :"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/textView6"

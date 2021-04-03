@@ -49,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:ems="10"
-            android:hint="Ad"
+            android:hint="Şirket Adı"
             android:inputType="textPersonName" />
 
         <EditText
@@ -77,11 +77,11 @@
             android:inputType="textPersonName" />
 
         <EditText
-            android:id="@+id/ozelık"
+            android:id="@+id/Özelık"
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:ems="10"
-            android:hint="Aranan Sıfat"
+            android:hint="özelikler"
             android:inputType="textPersonName" />
 
         <EditText
@@ -89,7 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:ems="10"
-            android:hint="Zaman"
+            android:hint="Kaç Saat"
             android:inputType="textPersonName" />
 
         <EditText

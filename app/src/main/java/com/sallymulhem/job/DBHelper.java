@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
-    public static final String DBNAME = "job";
-    public static final int DB_VERSION = 1;
-    public static final String KUrum_TABLE = "KURUM_ilan";
+    private static final String DBNAME = "job";
+    private static final int DB_VERSION = 2;
+    private static final String KUrum_TABLE = "KURUM_ilan";
     public static final String R0W_ID = "id";
     public static final String  ROW_AD= "ad";
     public static final String ROW_TEL = "tel";
@@ -22,6 +22,17 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String ROW_OZELİKLER = "ozelıkler";
     public static final String ROW_ZAMMAN = "zaman";
     public static final String ROW_MAAS = "maas";
+    //çalışan
+    private static final String calısan_TABLE = "calısan_ilan";
+    public static final String calısan_ID = "id";
+    public static final String calısan_ad = "ad";
+    public static final String calısan_bolum = "bolum";
+    public static final String calısan_tel = "tel";
+    public static final String calısan_yas = "yas";
+    public static final String calısan_deneyimler = "deneymler";
+    public static final String calısan_kurslar = "kurslar";
+
+
 
 
 
@@ -33,12 +44,14 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase MyDB) {
+    public void onCreate(SQLiteDatabase db) {
 
-        MyDB.execSQL("create Table users(username TEXT primary key, password TEXT)");
-        MyDB.execSQL("create Table KURUM_ilan(Ad TEXT, Adress TEXT, Acıklama TEXT, tel TEXT, ozelıkler TEXT, zaman TEXT, maas TEXT)");
-       // MyDB.execSQL("CREATE TABLE " +KUrum_TABLE+ " ("+ R0W_ID+" INTEGER primary key, "+ ROW_AD+" TEXT NOT NULL , "+ ROW_ADRESS+" TEXT NOT NULL, "+ ROW_ACIKLAMA+" TEXT NOT NULL, "+ ROW_TEL+" TEXT NOT NULL, "+ ROW_OZELİKLER+" TEXT NOT NULL, "+ ROW_ZAMMAN+" INTEGER, "+ ROW_MAAS+" INTEGER)");
-       // MyDB.execSQL("CREATE TABLE " +KUrum_TABLE+ " ("+ ROW_AD+" TEXT NOT NULL , "+ ROW_ADRESS+" TEXT NOT NULL, "+ ROW_ACIKLAMA+" TEXT NOT NULL, "+ ROW_TEL+" TEXT NOT NULL, "+ ROW_OZELİKLER+" TEXT NOT NULL, "+ ROW_ZAMMAN+" INTEGER, "+ ROW_MAAS+" INTEGER)");
+        db.execSQL("create Table users(username TEXT primary key, password TEXT)");
+       //MyDB.execSQL("create Table KURUM_ilan(Ad TEXT, Adress TEXT, Acıklama TEXT, tel TEXT, ozelıkler TEXT, zaman TEXT, maas TEXT)");
+        db.execSQL("create Table calısan_ilan(Ad TEXT, bolum TEXT, tel TEXT, yas int, deneymler TEXT, kurslar TEXT)");
+
+        // MyDB.execSQL("CREATE TABLE " +KUrum_TABLE+ " ("+ R0W_ID+" INTEGER primary key, "+ ROW_AD+" TEXT NOT NULL , "+ ROW_ADRESS+" TEXT NOT NULL, "+ ROW_ACIKLAMA+" TEXT NOT NULL, "+ ROW_TEL+" TEXT NOT NULL, "+ ROW_OZELİKLER+" TEXT NOT NULL, "+ ROW_ZAMMAN+" INTEGER, "+ ROW_MAAS+" INTEGER)");
+        db.execSQL("CREATE TABLE " +KUrum_TABLE+ " ("+ ROW_AD+" TEXT NOT NULL , "+ ROW_ADRESS+" TEXT NOT NULL, "+ ROW_ACIKLAMA+" TEXT NOT NULL, "+ ROW_TEL+" TEXT NOT NULL, "+ ROW_OZELİKLER+" TEXT NOT NULL, "+ ROW_ZAMMAN+" INTEGER, "+ ROW_MAAS+" INTEGER)");
 
 
     }
@@ -61,7 +74,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String[] sutunler = {ROW_AD,ROW_ADRESS,ROW_ACIKLAMA,ROW_TEL,ROW_OZELİKLER,ROW_ZAMMAN,ROW_MAAS};
         Cursor cursor = db.query(KUrum_TABLE , sutunler ,null , null , null , null , null );
         while (cursor.moveToNext()){
-            veriler.add(cursor.getString(0)+"\nAdress : "+cursor.getString(1)+"\nAçıklama : "+cursor.getString(2)+"\nTel : "+cursor.getString(3)+"\nİstelen : "+cursor.getString(4)+"\nZamman : "+cursor.getInt(5)+"\nMaaş : "+cursor.getInt(6));
+            veriler.add("Ad : "+cursor.getString(0)+"\nAdress : "+cursor.getString(1)+"\nAçıklama : "+cursor.getString(2)+"\nTel : "+cursor.getString(3)+"\nİstenlen : "+cursor.getString(4)+"\nZamman : "+cursor.getInt(5)+"\nMaaş : "+cursor.getInt(6));
         }
         /*String query = "SELECT * FROM "+KUrum_TABLE;
        db.rawQuery()*/
@@ -69,25 +82,38 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase MyDB, int i, int i1) {
-        MyDB.execSQL("drop Table if exists users");
-        MyDB.execSQL("drop Table if exists "+KUrum_TABLE);
-        onCreate( MyDB);
+    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+        db.execSQL("drop Table if exists users");
+        db.execSQL("drop Table if exists "+KUrum_TABLE);
+        db.execSQL("drop Table if exists "+calısan_TABLE);
+        onCreate( db);
 
     }
-    public Boolean insertcalisan(String isim_soyisim, int Yas ,String Bolum, String Tel ,String aciklama){
-        SQLiteDatabase MyDB = this.getWritableDatabase();
-        ContentValues contentValues= new ContentValues();
-        contentValues.put("isim_soyisim", isim_soyisim);
-        contentValues.put("Yas", Yas);
-        contentValues.put("Bolum", Bolum);
-        contentValues.put("Tel", Tel);
-        contentValues.put("aciklama", aciklama);
+    public void VeriEkle1(String Ad,String bolum,String tel,int yas,String deneymler,String kurslar){
+        SQLiteDatabase db =this.getWritableDatabase();
+        ContentValues cv =new ContentValues();
+        cv.put(calısan_ad,Ad.trim());
+        cv.put(calısan_bolum,bolum.trim());
+        cv.put(calısan_tel,tel.trim());
+        cv.put(calısan_yas,yas);
+        cv.put(calısan_deneyimler,deneymler.trim());
+        cv.put(calısan_kurslar,kurslar.trim());
+        db.insert(calısan_TABLE,null, cv);
+        db.close();
+    }
+    public List<String> VeriListele1(){
+        List<String> veriler1 = new ArrayList<String>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] sutunler1 = {calısan_ad,calısan_bolum,calısan_tel,calısan_yas,calısan_deneyimler,calısan_kurslar};
+        Cursor cursor = db.query(calısan_TABLE , sutunler1 ,null , null , null , null , null );
+        while (cursor.moveToNext()){
+            veriler1.add("AD : "+cursor.getString(0)+"\nbolum : "+cursor.getString(1)+"\ntel : "+cursor.getString(2)+"\nyas : "+cursor.getInt(3)+"\ndeneyimler : "+cursor.getString(4)+"\nkurslar : "+cursor.getString(5));
+        }
+        /*String query = "SELECT * FROM "+KUrum_TABLE;
+       db.rawQuery()*/
+     //   System.out.println("ufhhhfuufcdkjkjkckccmcöckckkdkld**d*d*d**d**********************d*d**d*d*d*dd*d*d*d*d*d*d*d**f*f*f*f**rr*r**f*f**c**c*d**dd*d*d**d*d*dd**d*dd*d*d**d*d*d**dd**d*d*d**dd**dd**d*d*dd**d*d**d*d*d*d");
+        return veriler1;
 
-        long result = MyDB.insert("calisan", null, contentValues);
-        if(result==-1) return false;
-        else
-            return true;
     }
 
     public Boolean insertData(String username, String password){
